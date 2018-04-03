@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+from pip.req import parse_requirements
+
+reqs = parse_requirements("requirements.txt", session='hack')
+reqs = [str(ir.req) for ir in reqs]
 
 from setuptools import setup, find_packages
 
@@ -20,5 +24,5 @@ setup(
     keywords='collect data facebook api',
     packages=find_packages(exclude=('tests', 'docs')),
     python_requires='>=3',
-
+    install_requires=reqs,
 )

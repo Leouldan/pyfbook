@@ -1,0 +1,65 @@
+account_all_days:
+  schema: facebook
+  table: account_all_days
+  level: account
+  fields:
+  - impressions
+  - spend
+  - clicks
+  - unique_clicks
+  - total_actions
+  - total_unique_actions
+  - reach
+  - date_start
+  - date_stop
+  - account_id
+  time_increment: all_days
+  date_window: default
+  dimension:
+  - account_id
+  - date_start
+  - date_stop
+
+account_day:
+  schema: facebook
+  table: account_day
+  level: account
+  fields:
+  - spend
+  - date_start
+  - date_stop
+  - account_id
+  time_increment: 1
+  date_window: default
+  dimension:
+  - account_id
+  - date_start
+  - date_stop
+
+
+campaign_all_days:
+  schema: facebook
+  table: campaign_insights
+  level: campaign
+  fields:
+  - campaign_name
+  - impressions
+  - spend
+  - clicks
+  - unique_clicks
+  - total_actions
+  - total_unique_actions
+  - reach
+  - objective
+  - campaign_id
+  - date_start
+  - date_stop
+  - account_id
+  time_increment: all_days
+  date_window: default
+  dimension:
+  - campaign_id
+  - account_id
+  - date_start
+  - date_stop
+

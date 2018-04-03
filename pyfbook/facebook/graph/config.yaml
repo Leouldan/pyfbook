@@ -1,0 +1,20 @@
+account:
+  schema: facebook
+  table: account
+  endpoint: adaccounts
+  fields:
+  - name
+  - account_id
+  dimension:
+  - account_id
+
+page:
+  schema: facebook
+  table: page
+  endpoint: accounts
+  fields:
+  - name
+  - id
+  - link
+  dimension:
+  - id

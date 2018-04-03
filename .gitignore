@@ -1,2 +1,8 @@
 env_pyfbook/*
 .idea
+.DS_Store
+build/
+dist/
+pyfbook.egg-info/
+pyfbook/.DS_Store
+__pycache__/

@@ -8,11 +8,30 @@ all_keys = {
 }
 
 
-def api_marketing(app_name, config_path, key, argv):
-    all_account_id = argv
-    for account in all_account_id:
-        result = pyfbook.facebook.marketing.main.main(app_name, config_path, key, account)
-        return result
+# def api_marketing(app_name, config_path, key, argv):
+#     all_account_id = argv
+#     for account in all_account_id:
+#         result = pyfbook.facebook.marketing.main.main(app_name, config_path, key, account)
+#         return result
+
+
+def get_marketing(project, start, end, all_account_id, spreadsheet_id=None, redshift_instance=None, test=False):
+    metric_dimension = pyfbook.facebook.path.get_marketing_metric_dimension(project, test)
+    for report_name in metric_dimension.keys():
+        report = {
+            "name": report_name,
+            "config": metric_dimension[report_name]
+        }
+        print("Loading report %s" % report_name)
+        all_time_increment = report["config"]["time_increment"]
+        all_result = []
+        for time_increment in all_time_increment:
+            print("Time increment "+str(time_increment))
+            result = pyfbook.facebook.marketing.main.main(project, start, end, report, time_increment, all_account_id, redshift_instance, spreadsheet_id)
+            all_result.append(result)
+        print("Finish loading report %s" % report_name)
+        if spreadsheet_id is None and redshift_instance is None:
+            print(all_result)
 
 
 #

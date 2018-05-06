@@ -1,15 +1,22 @@
+import os
 import requests
 from .. import credentials
 
-APP_NAME = "MHMOET"
+DEFAULT_GRAPH_API_VERSION = "v3.0"
 
 
-def get_request(endpoint, params):
-    fb_credentials = credentials.get_fb_credentials(APP_NAME)
-    url = "https://graph.facebook.com/v2.12/" + endpoint
+def get_request(app_name, endpoint, params):
+    api_version = os.environ.get("DEFAULT_GRAPH_API_VERSION")
+    if not api_version:
+        api_version = DEFAULT_GRAPH_API_VERSION
+    fb_credentials = credentials.get_fb_credentials(app_name)
+    url = "https://graph.facebook.com/"+api_version+"/" + endpoint
     params["access_token"] = fb_credentials["access_token"]
     data = []
     r = requests.get(url, params=params)
+    if r.status_code != 200:
+        print(r.text)
+        exit()
     result = r.json()
     data = data + result.get("data")
     if result.get("paging"):

@@ -1,6 +1,5 @@
 import pyfbook.facebook
 
-
 all_keys = {
     "marketing": ["account_all_days", "account_day", "campaign_all_days"],
     "page": ["page_all_days", "page_fan"],
@@ -26,12 +25,28 @@ def get_marketing(project, start, end, all_account_id, spreadsheet_id=None, reds
         all_time_increment = report["config"]["time_increment"]
         all_result = []
         for time_increment in all_time_increment:
-            print("Time increment "+str(time_increment))
-            result = pyfbook.facebook.marketing.main.main(project, start, end, report, time_increment, all_account_id, redshift_instance, spreadsheet_id)
+            print("Time increment " + str(time_increment))
+            result = pyfbook.facebook.marketing.main.main(project, start, end, report, time_increment, all_account_id,
+                                                          redshift_instance, spreadsheet_id)
             all_result.append(result)
         print("Finish loading report %s" % report_name)
         if spreadsheet_id is None and redshift_instance is None:
             print(all_result)
+
+
+def get_account_info(project, user_id="me", spreadsheet_id=None, redshift_instance=None, test=False):
+    metric_dimension = pyfbook.facebook.path.get_graph_metric_dimension(project, test)
+    for report_name in metric_dimension.keys():
+        report = {
+            "name": report_name,
+            "config": metric_dimension[report_name]
+        }
+        print("Loading report %s" % report_name)
+        result = pyfbook.facebook.graph.main.main(project, report, user_id,
+                                                  redshift_instance, spreadsheet_id)
+        print("Finish loading report %s" % report_name)
+        if spreadsheet_id is None and redshift_instance is None:
+            print(result)
 
 
 #

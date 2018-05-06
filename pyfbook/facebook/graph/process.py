@@ -1,4 +1,3 @@
-from . import config_dict
 import hashlib
 
 
@@ -11,6 +10,7 @@ def create_id(row, dimension):
 
 
 def process_data(data, fields, dimension):
+    all_batch_id = []
     final_data = []
     for row in data:
         final_row = []
@@ -19,33 +19,26 @@ def process_data(data, fields, dimension):
                 final_row.append(row[k])
             else:
                 final_row.append(0)
-        final_row.append(create_id(row, dimension))
+        batch_id = create_id(row, dimension)
+        if batch_id not in all_batch_id:
+            all_batch_id.append(batch_id)
+        final_row.append(batch_id)
         final_data.append(final_row)
-    return final_data
+    return final_data, all_batch_id
 
 
-def process_data_page(data, fields):
-    final_data = []
-    for row in data:
-        final_row = []
-        for k in fields:
-            if k in row.keys():
-                final_row.append(row[k])
-            else:
-                final_row.append(0)
-        final_data.append(final_row)
-    return final_data
-
-
-def main(key, data):
-    key_config = config_dict.fb_config[key]
-    columns = key_config["fields"].copy()
-    if key == "page":
-        fields = key_config["fields"]
-        data = process_data_page(data, fields)
-        return columns, data
+def main(report_config, data):
+    columns = report_config["fields"].copy()
     columns.append("id")
-    dimension = key_config["dimension"]
-    fields = key_config["fields"]
-    data = process_data(data, fields, dimension)
-    return columns, data
+    # dimension = []
+    # if "user_id" in  report_config["fields"]:
+    #     dimension.append("user_id")
+    # if "account_id" in report_config["fields"]:
+    #     dimension.append("account_id")
+    # if "id" in report_config["fields"]:
+    #     dimension.append("id")
+    all_dimension = ["user_id", "id", "account_id"]
+    dimension = [item for item in all_dimension if item in report_config["fields"]]
+    fields = report_config["fields"].copy()
+    data, all_batch_id = process_data(data, fields, dimension)
+    return columns, data, all_batch_id

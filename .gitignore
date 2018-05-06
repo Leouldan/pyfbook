@@ -6,3 +6,4 @@ dist/
 pyfbook.egg-info/
 pyfbook/.DS_Store
 __pycache__/
+sandbox.py

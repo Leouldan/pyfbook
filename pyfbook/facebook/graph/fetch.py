@@ -1,19 +1,19 @@
-from facebook.graph import config_dict, api
+from pyfbook.facebook.graph import api
 
 
-def _get_info(endpoint, fields):
-    endpoint = "me/"+endpoint
+def _get_info(project, user_id, endpoint, fields):
+    endpoint = str(user_id)+"/"+endpoint
     params = {
         "fields": fields,
     }
-    data = api.get_request(endpoint, params)
+    data = api.get_request(project, endpoint, params)
+    print(data)
     return data
 
 
-def info(key):
-    key_config = config_dict.fb_config[key]
-    fields = ", ".join(key_config["fields"])
-    endpoint = key_config["endpoint"]
-    data = _get_info(endpoint, fields)
+def info(project, report_config, user_id):
+    fields = ", ".join(report_config["fields"])
+    endpoint = report_config["endpoint"]
+    data = _get_info(project, user_id, endpoint, fields)
     return data
 

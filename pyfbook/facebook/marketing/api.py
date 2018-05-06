@@ -1,13 +1,22 @@
+import os
 import requests
 from .. import credentials
 
+DEFAULT_GRAPH_API_VERSION = "v3.0"
+
 
 def get_request(app_name, endpoint, params):
+    api_version = os.environ.get("DEFAULT_GRAPH_API_VERSION")
+    if not api_version:
+        api_version = DEFAULT_GRAPH_API_VERSION
     fb_credentials = credentials.get_fb_credentials(app_name)
-    url = "https://graph.facebook.com/v2.12/" + endpoint
+    url = "https://graph.facebook.com/"+api_version+"/" + endpoint
     params["access_token"] = fb_credentials["access_token"]
     data = []
     r = requests.get(url, params=params)
+    if r.status_code != 200:
+        print(r.text)
+        exit()
     result = r.json()
     if not result.get("data"):
         return data

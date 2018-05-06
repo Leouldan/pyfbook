@@ -1,16 +1,23 @@
-from facebook.graph import fetch, process, config_dict
+from pyfbook.facebook.graph import fetch, process
+from pyfbook.facebook.redshift import to_redshift
 
 
-def main(key):
-    key_config = config_dict.fb_config[key]
-    schema = key_config["schema"]
-    table = key_config["table"]
-    data = fetch.info(key)
-    columns, data = process.main(key, data)
-    redshift_table = schema + "." + table
+def main(project, report, user_id="me",redshift_instance=None, spreadsheet_id=None):
+    report_name = report.get("name")
+    report_config = report.get("config")
+    output_storage_name = "facebook.graph_" + report_name
+    data = fetch.info(project, report_config, user_id)
+    columns, data, all_batch_id = process.main(report_config, data)
     result = {
-        "table_name": redshift_table,
+        "table_name": output_storage_name,
         "columns_name": columns,
         "rows": data
     }
+    if redshift_instance:  # Send to Redshift
+        to_redshift(result, all_batch_id, redshift_instance)
+        print(
+            "Finished sent to Redshift " + report_name)
+    if spreadsheet_id:  # Prepare to send to spreadsheet
+        result["worksheet_name"] = output_storage_name
     return result
+

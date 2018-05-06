@@ -9,16 +9,34 @@ def create_id(row, dimension):
     return row_id
 
 
-def process_data(data, fields, dimension):
+def find_purchase_value_in_row(row):
+    actions = row.get("actions")
+    if actions:
+        for item in actions:
+            if item["action_type"] == 'offsite_conversion.fb_pixel_purchase':
+                purchase_value = item["value"]
+                return purchase_value
+    else:
+        return None
+
+
+def process_data(data, fields, dimension, breakdowns=None):
     all_batch_id = []
     final_data = []
     for row in data:
         final_row = []
         for k in fields:
-            if k in row.keys():
+            if k == "purchase":
+                purchase_value = find_purchase_value_in_row(row)
+                final_row.append(purchase_value)
+
+            elif k in row.keys():
                 final_row.append(row[k])
             else:
                 final_row.append(0)
+        if breakdowns:
+            for b in breakdowns:
+                final_row.append(row[b])
         batch_id = create_id(row, dimension)
         if batch_id not in all_batch_id:
             all_batch_id.append(batch_id)
@@ -31,7 +49,12 @@ def main(report_config, data):
     columns = report_config["fields"].copy()
     columns.append("batch_id")
     level = report_config["level"]
-    dimension = ["account_id", "date_start", "date_stop"]
+    if report_config.get("breakdowns"):
+        breakdowns = [b for b in report_config.get("breakdowns")]
+        dimension = ["account_id", "date_start", "date_stop"] + breakdowns
+    else:
+        breakdowns = None
+        dimension = ["account_id", "date_start", "date_stop"]
     if level != 'account':
         dimension.append("campaign_id")
         if level != 'campaign':
@@ -39,5 +62,5 @@ def main(report_config, data):
             if level != 'adset':
                 dimension.append("ad_id")
     fields = report_config["fields"]
-    data, all_batch_id = process_data(data, fields, dimension)
+    data, all_batch_id = process_data(data, fields, dimension, breakdowns=breakdowns)
     return columns, data, all_batch_id

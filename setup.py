@@ -14,7 +14,7 @@ with open('LICENSE') as f:
 
 setup(
     name='pyfbook',
-    version='0.0.5',
+    version='0.0.6',
     description='Easily collect data from Facebook APIs',
     long_description=readme,
     author='Dacker',

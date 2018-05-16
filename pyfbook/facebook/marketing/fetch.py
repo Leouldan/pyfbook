@@ -17,7 +17,6 @@ def _get_insights(project, account_id, fields, since, until, time_increment, lev
 
 
 def insights(project, start, end, report_config, time_increment, all_account_id):
-    print(report_config)
     level = report_config["level"]
     fields = report_config["fields"].copy()
     if "purchase" in fields:

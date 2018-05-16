@@ -1,18 +1,5 @@
 import pyfbook.facebook
 
-all_keys = {
-    "marketing": ["account_all_days", "account_day", "campaign_all_days"],
-    "page": ["page_all_days", "page_fan"],
-    "graph": ["account", "page"]
-}
-
-
-# def api_marketing(app_name, config_path, key, argv):
-#     all_account_id = argv
-#     for account in all_account_id:
-#         result = pyfbook.facebook.marketing.main.main(app_name, config_path, key, account)
-#         return result
-
 
 def get_marketing(project, start, end, all_account_id, spreadsheet_id=None, redshift_instance=None, test=False):
     metric_dimension = pyfbook.facebook.path.get_marketing_metric_dimension(project, test)
@@ -47,6 +34,26 @@ def get_account_info(project, user_id="me", spreadsheet_id=None, redshift_instan
         print("Finish loading report %s" % report_name)
         if spreadsheet_id is None and redshift_instance is None:
             print(result)
+
+
+# def get_page(project, start, end, all_page_id, spreadsheet_id=None, redshift_instance=None, test=False):
+#     metric_dimension = pyfbook.facebook.path.get_page_metric_dimension(project, test)
+#     for report_name in metric_dimension.keys():
+#         report = {
+#             "name": report_name,
+#             "config": metric_dimension[report_name]
+#         }
+#         print("Loading report %s" % report_name)
+#         all_period = report["config"]["period"]
+#         all_result = []
+#         for period in all_period:
+#             print("Period " + str(period))
+#             result = pyfbook.facebook.page.main.main(project, start, end, report, period, all_page_id,
+#                                                           redshift_instance, spreadsheet_id)
+#             all_result.append(result)
+#         print("Finish loading report %s" % report_name)
+#         if spreadsheet_id is None and redshift_instance is None:
+#             print(all_result)
 
 
 #

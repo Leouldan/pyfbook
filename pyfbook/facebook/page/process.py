@@ -1,4 +1,3 @@
-from . import config_dict
 import hashlib
 import pandas as pd
 

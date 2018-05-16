@@ -16,6 +16,9 @@ metric_dimension = {
         "time_increment": [
             "all_days",
             "1"
+        ],
+        "breakdowns": [
+            "country"
         ]
     },
     "campaign": {

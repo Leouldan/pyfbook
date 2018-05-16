@@ -8,11 +8,23 @@ import pyfbook
 def get_marketing_metric_dimension(project, test):
     facebook_marketing_yaml_path = os.environ.get("FACEBOOK_MARKETING_%s_YAML_PATH" % project)
     if facebook_marketing_yaml_path:
+        print("OK")
         with open(facebook_marketing_yaml_path, 'r') as stream:
             metric_dimension = yaml.load(stream)
         return metric_dimension
     if not facebook_marketing_yaml_path:
         metric_dimension = pyfbook.facebook.marketing.metric_dimension.metric_dimension
+        return metric_dimension
+
+
+def get_page_metric_dimension(project, test):
+    facebook_page_yaml_path = os.environ.get("FACEBOOK_PAGE_%s_YAML_PATH" % project)
+    if facebook_page_yaml_path:
+        with open(facebook_page_yaml_path, 'r') as stream:
+            metric_dimension = yaml.load(stream)
+        return metric_dimension
+    if not facebook_page_yaml_path:
+        metric_dimension = pyfbook.facebook.page.metric_dimension.metric_dimension
         return metric_dimension
 
 

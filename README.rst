@@ -17,7 +17,7 @@ Name your project (ex: your facebook app name).
 
 Add in your environment : - export FB_%s_APP_ID = “YOUR_FACEBOOK_APP_ID”
 - export FB_%s_APP_SECRET = “YOUR_FACEBOOK_APP_SECRET” - export
-FB_%s_APP_ACCESSTOKEN = “YOUR_FACEBOOK_APP_ACCESSTOKEN”
+FB_%s_ACCESSTOKEN = “YOUR_FACEBOOK_ACCESSTOKEN”
 
 Replace ‘%s’ with your project name.
 

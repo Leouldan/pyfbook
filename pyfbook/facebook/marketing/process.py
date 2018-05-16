@@ -47,7 +47,6 @@ def process_data(data, fields, dimension, breakdowns=None):
 
 def main(report_config, data):
     columns = report_config["fields"].copy()
-    columns.append("batch_id")
     level = report_config["level"]
     if report_config.get("breakdowns"):
         breakdowns = [b for b in report_config.get("breakdowns")]
@@ -56,6 +55,7 @@ def main(report_config, data):
     else:
         breakdowns = None
         dimension = ["account_id", "date_start", "date_stop"]
+    columns.append("batch_id")
     if level != 'account':
         dimension.append("campaign_id")
         if level != 'campaign':

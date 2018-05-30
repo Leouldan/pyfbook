@@ -4,17 +4,13 @@ from pyfbook.facebook import date
 from pyfbook.facebook.redshift import to_redshift
 
 
-def main(project, start, end, report, period, all_page_id,redshift_instance, spreadsheet_id):
+def main(project, start, end, report, period, all_page_id, redshift_instance, spreadsheet_id):
     report_name = report.get("name")
     report_config = report.get("config")
     output_storage_name = "facebook.page_" + report_name + "_" + period.replace(":", "_")
     data = fetch.insights(project, start, end, report_config, period, all_page_id)
     columns, data, all_batch_id = process.main(report_config, data)
-    result = {
-        "table_name": output_storage_name,
-        "columns_name": columns,
-        "rows": data
-    }
+    result = dict(table_name=output_storage_name, columns_name=columns, rows=data)
     if redshift_instance:  # Send to Redshift
         to_redshift(result, all_batch_id, redshift_instance)
         print(

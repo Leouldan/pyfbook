@@ -29,7 +29,7 @@ def process_data(data, fields, dimension):
 
 def main(report_config, data):
     columns = report_config["fields"].copy()
-    columns.append("id")
+    columns.append("batch_id")
     # dimension = []
     # if "user_id" in  report_config["fields"]:
     #     dimension.append("user_id")

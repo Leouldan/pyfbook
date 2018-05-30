@@ -16,7 +16,7 @@ def get_request(app_name, endpoint, params):
     r = requests.get(url, params=params)
     if r.status_code != 200:
         print(r.text)
-        exit()
+        return data
     result = r.json()
     if not result.get("data"):
         return data

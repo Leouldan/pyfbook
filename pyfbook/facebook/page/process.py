@@ -48,10 +48,12 @@ def process_data(page_id, data, metric, dimension, columns):
     for m in metric:
         if m not in list(result.columns):
             result[m] = 0
-    result["id"] = result.apply(lambda row: create_id(row, dimension), axis=1)
+    result["page_id"] = page_id
+    result["batch_id"] = result.apply(lambda row: create_id(row, dimension), axis=1)
+    all_batch_id = list(result["batch_id"])
     result = result[columns]
     final_result = format_dataframe(result)
-    return final_result
+    return final_result, all_batch_id
 
 # def process_data(page_id, data, metric, dimension, columns):
 #     frames = []
@@ -85,11 +87,20 @@ def process_data(page_id, data, metric, dimension, columns):
 #     return final_result
 
 
-def main(key, page_id, data):
-    key_config = config_dict.fb_config[key]
-    columns = key_config["dimension"].copy() + key_config["metric"].copy()
-    columns.append("id")
-    dimension = key_config["dimension"]
-    metric = key_config["metric"]
-    data = process_data(page_id, data, metric, dimension, columns)
-    return columns, data
+def main(report_config, data):
+    columns = report_config["metric"].copy()
+    dimension = ["page_id", "end_time", "period"]
+    columns.append("page_id")
+    columns.append("batch_id")
+    metric = report_config["metric"].copy()
+    data_process = []
+    all_batch_id = []
+    for rawdata in data:
+        page_id = rawdata["page_id"]
+        print("Process data for page " + str(page_id))
+        data_one_page = rawdata["data"]
+        if data_one_page:
+            data_one_page, all_batch_id_one_page = process_data(page_id, data_one_page, metric, dimension, columns)
+            data_process = data_process + data_one_page
+            all_batch_id = all_batch_id + all_batch_id_one_page
+    return columns, data_process, all_batch_id

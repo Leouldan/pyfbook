@@ -1,12 +1,16 @@
+import os
 import requests
 from .. import credentials
 
-APP_NAME = "MHMOET"
+DEFAULT_GRAPH_API_VERSION = "v3.0"
 
 
-def _get_request(endpoint, params):
-    fb_credentials = credentials.get_fb_credentials(APP_NAME)
-    url = "https://graph.facebook.com/v2.12/" + endpoint
+def _get_request(app_name, endpoint, params):
+    api_version = os.environ.get("DEFAULT_GRAPH_API_VERSION")
+    if not api_version:
+        api_version = DEFAULT_GRAPH_API_VERSION
+    fb_credentials = credentials.get_fb_credentials(app_name)
+    url = "https://graph.facebook.com/" + api_version + "/" + endpoint
     params["access_token"] = fb_credentials["access_token"]
     data = []
     r = requests.get(url, params=params)
@@ -24,21 +28,30 @@ def _get_request(endpoint, params):
     return data
 
 
-def _get_page_access_token(page_id):
+def _get_page_access_token(app_name, page_id):
     endpoint = "me/accounts"
     params = {"fields": "access_token"}
-    data = _get_request(endpoint, params)
+    data = _get_request(app_name, endpoint, params)
     for row in data:
         if row["id"] == page_id:
             return row["access_token"]
     return "Not found"
 
 
-def get_request(page_id, endpoint, params):
-    page_access_token = _get_page_access_token(page_id)
-    url = "https://graph.facebook.com/v2.12/" + endpoint
+def get_request(app_name, page_id, endpoint, params):
+    page_access_token = _get_page_access_token(app_name, page_id)
+    api_version = os.environ.get("DEFAULT_GRAPH_API_VERSION")
+    if not api_version:
+        api_version = DEFAULT_GRAPH_API_VERSION
+    url = "https://graph.facebook.com/" + api_version + "/" + endpoint
     params["access_token"] = page_access_token
     r = requests.get(url, params=params)
+    if r.status_code != 200:
+        print(r.text)
+        return []
+    result = r.json()
+    if not result.get("data"):
+        return []
     result = r.json()
     data = result.get("data")
     # if result.get("paging"):

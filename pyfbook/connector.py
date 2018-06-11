@@ -36,25 +36,24 @@ def get_account_info(project, user_id="me", spreadsheet_id=None, redshift_instan
             print(result)
 
 
-# def get_page(project, start, end, all_page_id, spreadsheet_id=None, redshift_instance=None, test=False):
-#     metric_dimension = pyfbook.facebook.path.get_page_metric_dimension(project, test)
-#     for report_name in metric_dimension.keys():
-#         report = {
-#             "name": report_name,
-#             "config": metric_dimension[report_name]
-#         }
-#         print("Loading report %s" % report_name)
-#         all_period = report["config"]["period"]
-#         all_result = []
-#         for period in all_period:
-#             print("Period " + str(period))
-#             result = pyfbook.facebook.page.main.main(project, start, end, report, period, all_page_id,
-#                                                           redshift_instance, spreadsheet_id)
-#             all_result.append(result)
-#         print("Finish loading report %s" % report_name)
-#         if spreadsheet_id is None and redshift_instance is None:
-#             print(all_result)
-
+def get_page(project, start, end, all_page_id, spreadsheet_id=None, redshift_instance=None, test=False):
+    metric_dimension = pyfbook.facebook.path.get_page_metric_dimension(project, test)
+    for report_name in metric_dimension.keys():
+        report = {
+            "name": report_name,
+            "config": metric_dimension[report_name]
+        }
+        print("Loading report %s" % report_name)
+        all_period = report["config"]["period"]
+        all_result = []
+        for period in all_period:
+            print("Period " + str(period))
+            result = pyfbook.facebook.page.main.main(project, start, end, report, period, all_page_id,
+                                                     redshift_instance, spreadsheet_id)
+            all_result.append(result)
+        print("Finish loading report %s" % report_name)
+        if spreadsheet_id is None and redshift_instance is None:
+            print(all_result)
 
 #
 # def api_graph(key):

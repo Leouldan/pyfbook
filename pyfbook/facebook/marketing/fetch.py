@@ -21,6 +21,8 @@ def insights(project, start, end, report_config, time_increment, all_account_id)
     fields = report_config["fields"].copy()
     if "purchase" in fields:
         fields[fields.index("purchase")] = "actions"
+    if "video_view_10_sec" in fields:
+        fields[fields.index("video_view_10_sec")] = "video_10_sec_watched_actions"
     fields = ", ".join(fields)
     if report_config.get("breakdowns"):
         breakdowns = [b for b in report_config.get("breakdowns")]

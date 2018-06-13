@@ -1,4 +1,5 @@
 import pyfbook.facebook
+from pyfbook.facebook.date import segment_month_date
 
 
 def get_marketing(project, start, end, all_account_id, spreadsheet_id=None, redshift_instance=None, test=False):
@@ -48,9 +49,11 @@ def get_page(project, start, end, all_page_id, spreadsheet_id=None, redshift_ins
         all_result = []
         for period in all_period:
             print("Period " + str(period))
-            result = pyfbook.facebook.page.main.main(project, start, end, report, period, all_page_id,
-                                                     redshift_instance, spreadsheet_id)
-            all_result.append(result)
+            all_date = segment_month_date(start, end)
+            for date in all_date:
+                result = pyfbook.facebook.page.main.main(project, date[0], date[1], report, period, all_page_id,
+                                                         redshift_instance, spreadsheet_id)
+                all_result.append(result)
         print("Finish loading report %s" % report_name)
         if spreadsheet_id is None and redshift_instance is None:
             print(all_result)

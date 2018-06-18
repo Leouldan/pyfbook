@@ -91,6 +91,8 @@ def main(report_config, data):
     columns = report_config["metric"].copy()
     dimension = ["page_id", "end_time", "period"]
     columns.append("page_id")
+    columns.append("period")
+    columns.append("end_time")
     columns.append("batch_id")
     metric = report_config["metric"].copy()
     data_process = []

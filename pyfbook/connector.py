@@ -57,6 +57,7 @@ def get_page(project, start, end, all_page_id, spreadsheet_id=None, redshift_ins
         print("Finish loading report %s" % report_name)
         if spreadsheet_id is None and redshift_instance is None:
             print(all_result)
+            return all_result
 
 #
 # def api_graph(key):

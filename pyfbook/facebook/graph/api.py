@@ -16,7 +16,7 @@ def get_request(app_name, endpoint, params):
     r = requests.get(url, params=params)
     if r.status_code != 200:
         print(r.text)
-        exit()
+        raise ValueError("Error when requesting graph api: %s" % r.text)
     result = r.json()
     data = data + result.get("data")
     if result.get("paging"):

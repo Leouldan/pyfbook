@@ -31,6 +31,15 @@ def find_video_view_value(row, action_type):
         return None
 
 
+def compute_total_actions(row):
+    actions = row.get("actions")
+    total_actions = 0
+    if actions:
+        for item in actions:
+            total_actions = total_actions + int(item["value"])
+    return total_actions
+
+
 def process_data(data, fields, dimension, breakdowns=None):
     all_batch_id = []
     final_data = []
@@ -40,6 +49,9 @@ def process_data(data, fields, dimension, breakdowns=None):
             if k == "purchase":
                 purchase_value = find_purchase_value_in_row(row)
                 final_row.append(purchase_value)
+            elif k == "total_actions":
+                total_actions = compute_total_actions(row)
+                final_row.append(total_actions)
             elif k in ("video_view_10_sec",):
                 video_view_10_sec = find_video_view_value(row, "video_view")
                 final_row.append(video_view_10_sec)

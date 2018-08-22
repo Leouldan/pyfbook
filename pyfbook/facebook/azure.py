@@ -8,7 +8,7 @@ def to_azure(result, all_batch_id, azure_instance):
     print(azure_table)
     if all_batch_id:
         try:
-            query = 'DELETE FROM ' + azure_table + ' WHERE batch_id IN ' + "(" + ",".join(all_batch_id) + ")"
+            query = 'DELETE FROM ' + azure_table + ' WHERE batch_id IN ' + "(" + ",".join(all_batch_id) + ");"
             pyzure.execute.execute_query(azure_instance, query)
         except pyodbc.ProgrammingError:
             pass

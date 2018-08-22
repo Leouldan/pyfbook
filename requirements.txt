@@ -4,4 +4,4 @@ idna==2.6
 PyYAML==3.12
 requests==2.18.4
 urllib3==1.22
-pyzure==0.0.6
+pyzure==0.0.7

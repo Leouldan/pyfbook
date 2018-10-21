@@ -46,8 +46,6 @@ def get_request(app_name, page_id, endpoint, params):
     url = "https://graph.facebook.com/" + api_version + "/" + endpoint
     params["access_token"] = page_access_token
     r = requests.get(url, params=params)
-    print(r)
-    exit()
     if r.status_code != 200:
         print(r.text)
         return []

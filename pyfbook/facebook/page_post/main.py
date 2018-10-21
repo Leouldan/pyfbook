@@ -31,12 +31,12 @@ def main(
     if redshift_instance:  # Send to Redshift
         to_redshift(result, all_batch_id, redshift_instance)
         print(
-            "Finished sent to Redshift " + report_name + " " + period)
+            "Finished sent to Redshift " + report_name)
 
     if azure_instance:  # Send to Azure
         to_azure(result, all_batch_id, azure_instance)
         print(
-            "Finished sent to Azure " + report_name + " " + period)
+            "Finished sent to Azure " + report_name)
 
     if spreadsheet_id:  # Prepare to send to spreadsheet
         result["worksheet_name"] = output_storage_name

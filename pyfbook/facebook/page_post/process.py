@@ -15,6 +15,8 @@ def process_data(data, fields, dimension):
     for row in data:
         final_row = []
         for k in fields:
+            if k == 'message':
+                k = k[:75]
             if k in row.keys():
                 final_row.append(row[k])
             else:

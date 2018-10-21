@@ -38,16 +38,14 @@ def _get_page_access_token(app_name, page_id):
     return "Not found"
 
 
-def get_request(app_name, page_id, endpoint, params):
-    page_access_token = _get_page_access_token(app_name, page_id)
+def get_request(app_name, post_id, endpoint, params):
+    page_access_token = _get_page_access_token(app_name, post_id.split('_')[0])
     api_version = os.environ.get("DEFAULT_GRAPH_API_VERSION")
     if not api_version:
         api_version = DEFAULT_GRAPH_API_VERSION
     url = "https://graph.facebook.com/" + api_version + "/" + endpoint
     params["access_token"] = page_access_token
     r = requests.get(url, params=params)
-    print(r)
-    exit()
     if r.status_code != 200:
         print(r.text)
         return []
@@ -56,14 +54,4 @@ def get_request(app_name, page_id, endpoint, params):
         return []
     result = r.json()
     data = result.get("data")
-    # if result.get("paging"):
-    #     paging = True
-    #     while paging:
-    #         print(result["paging"])
-    #         if result["paging"].get("next"):
-    #             r = requests.get(result["paging"]["next"])
-    #             result = r.json()
-    #             data = data + result.get("data")
-    #         else:
-    #             paging = False
     return data

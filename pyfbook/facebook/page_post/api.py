@@ -46,8 +46,6 @@ def get_request(app_name, page_id, endpoint, params):
     url = "https://graph.facebook.com/" + api_version + "/" + endpoint
     params["access_token"] = page_access_token
     r = requests.get(url, params=params)
-    print(r)
-    exit()
     if r.status_code != 200:
         print(r.text)
         return []
@@ -56,14 +54,4 @@ def get_request(app_name, page_id, endpoint, params):
         return []
     result = r.json()
     data = result.get("data")
-    # if result.get("paging"):
-    #     paging = True
-    #     while paging:
-    #         print(result["paging"])
-    #         if result["paging"].get("next"):
-    #             r = requests.get(result["paging"]["next"])
-    #             result = r.json()
-    #             data = data + result.get("data")
-    #         else:
-    #             paging = False
     return data

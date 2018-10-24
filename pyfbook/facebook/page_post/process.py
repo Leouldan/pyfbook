@@ -20,7 +20,7 @@ def process_data(data, fields, dimension):
             if k in row.keys():
                 final_row.append(row[k])
             else:
-                final_row.append(0)
+                final_row.append(None)
         batch_id = create_id(row, dimension)
         if batch_id not in all_batch_id:
             all_batch_id.append(batch_id)

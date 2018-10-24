@@ -39,7 +39,10 @@ def _get_page_access_token(app_name, page_id):
 
 
 def get_request(app_name, page_id, endpoint, params):
-    page_access_token = _get_page_access_token(app_name, page_id)
+    page_access_token = os.environ.get("FB_%s_PAGE_ACCESSTOKEN" % app_name)
+    if not page_access_token:
+        page_access_token = _get_page_access_token(app_name, page_id)
+        os.environ["FB_%s_PAGE_ACCESSTOKEN" % app_name] = page_access_token
     api_version = os.environ.get("DEFAULT_GRAPH_API_VERSION")
     if not api_version:
         api_version = DEFAULT_GRAPH_API_VERSION

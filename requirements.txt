@@ -5,3 +5,4 @@ PyYAML==3.12
 requests>=2.20.0
 urllib3>=1.23
 pyzure>=0.0.7
+pyred>=0.2.9

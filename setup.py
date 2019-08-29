@@ -19,13 +19,12 @@ with open('LICENSE') as f:
 
 setup(
     name='pyfbook',
-    version='0.0.24',
+    version='0.0.25',
     description='Easily collect data from Facebook APIs',
     long_description=readme,
     author='Dacker',
     author_email='hello@dacker.co',
     url='https://github.com/dacker-team/pyfbook',
-    license=license,
     keywords='collect data facebook api',
     packages=find_packages(exclude=('tests', 'docs')),
     python_requires='>=3',

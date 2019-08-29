@@ -1,4 +1,5 @@
 import pyfbook.facebook
+from pyfbook.facebook.config import get_config
 from pyfbook.facebook.date import segment_month_date
 
 

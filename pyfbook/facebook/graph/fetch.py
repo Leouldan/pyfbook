@@ -7,7 +7,6 @@ def _get_info(project, user_id, endpoint, fields):
         "fields": fields,
     }
     data = api.get_request(project, endpoint, params)
-    print(data)
     return data
 
 

@@ -2,7 +2,7 @@ import os
 import requests
 from .. import credentials
 
-DEFAULT_GRAPH_API_VERSION = "v3.0"
+DEFAULT_GRAPH_API_VERSION = "v3.3"
 
 
 def get_request(app_name, endpoint, params):
@@ -31,7 +31,10 @@ def get_request(app_name, endpoint, params):
     return data
 
 
-def get(system_user, endpoint, params, api_version="v3.2"):
+def get(system_user, endpoint, params):
+    api_version = os.environ.get("DEFAULT_GRAPH_API_VERSION")
+    if not api_version:
+        api_version = DEFAULT_GRAPH_API_VERSION
     url = "https://graph.facebook.com/%s/%s" % (api_version, endpoint)
     params["access_token"] = system_user.access_token
     data = []
@@ -62,7 +65,10 @@ def get(system_user, endpoint, params, api_version="v3.2"):
     return data
 
 
-def post(system_user, endpoint, params, api_version="v3.2"):
+def post(system_user, endpoint, params):
+    api_version = os.environ.get("DEFAULT_GRAPH_API_VERSION")
+    if not api_version:
+        api_version = DEFAULT_GRAPH_API_VERSION
     url = "https://graph.facebook.com/%s/%s" % (api_version, endpoint)
     params["access_token"] = system_user.access_token
     r = requests.post(url, params=params)

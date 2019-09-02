@@ -3,6 +3,7 @@ import logging
 import datetime
 
 import emoji
+import os
 import pandas as pd
 import requests
 
@@ -15,6 +16,8 @@ from pyfbook.facebook.tools.execute_query import execute_query, send_data
 
 from pyfbook.facebook.report import time_increment_mapping, make_date, make_batch_id, treat_actions, SPECIAL_ACTIONS, \
     treat_special_action
+
+DEFAULT_GRAPH_API_VERSION = "v3.3"
 
 
 def _post_insights(config, account, fields, since, until, time_increment, level, breakdowns):
@@ -125,7 +128,10 @@ def post_reports(config, start, end):
         post_report(config, report, start, end)
 
 
-def _get_report_status(system_user, endpoint, params, api_version="v3.2"):
+def _get_report_status(system_user, endpoint, params):
+    api_version = os.environ.get("DEFAULT_GRAPH_API_VERSION")
+    if not api_version:
+        api_version = DEFAULT_GRAPH_API_VERSION
     url = "https://graph.facebook.com/%s/%s" % (api_version, endpoint)
     params["access_token"] = system_user.access_token
     r = requests.get(url, params=params)

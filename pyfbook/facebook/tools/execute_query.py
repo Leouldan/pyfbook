@@ -1,5 +1,5 @@
 import pyred
-import pyzure
+# import pyzure
 
 
 def execute_query(query, config):

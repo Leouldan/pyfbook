@@ -47,7 +47,21 @@ def _post_insights(config, account, fields, since, until, time_increment, level,
             "breakdowns": breakdowns
         }
     data = post(system_user=SystemUser.get(config, account["app_system_user_id"]), endpoint=endpoint, params=params)
-    return {'report_run_id': data, 'app_system_user_id': account["app_system_user_id"], 'account_id': account["id"]}
+    return {'report_run_id': data, 'app_system_user_id': account["app_system_user_id"], 'account_id': account["id"],
+            "start_report": since, "end_report": until}
+
+
+# noinspection SqlNoDataSourceInspection
+def define_start_date(config, report, time_increment, account):
+    table_name = '%s.%s' % (config.get('schema_name'), 'report_async')
+    query = """
+            SELECT max(end_report)
+            FROM %s 
+            WHERE account_id=%s and time_increment=%s and report_name=%s and status='Job Completed'
+            and created_at>=end_report
+            """ % (table_name, account, time_increment, report.get('name'))
+    start_date = execute_query(query, config)
+    return datetime.datetime.strptime(str(start_date)[:10], '%Y-%m-%d') - datetime.timedelta(days=28)
 
 
 def post_report_time_increment(config, report, time_increment, start, end):
@@ -76,6 +90,10 @@ def post_report_time_increment(config, report, time_increment, start, end):
         query = 'SELECT DISTINCT id, app_system_user_id FROM %s' % (config["schema_name"] + '.ad_accounts')
     accounts = execute_query(config=config, query=query)
     for account in accounts:
+        if start is None:
+            start = define_start_date(config, report, time_increment, account)
+        if end is None:
+            end = str(datetime.datetime.now())[:10]
         data.append(_post_insights(config, account, fields, start, end, time_increment, level, breakdowns))
     return data
 

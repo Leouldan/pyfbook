@@ -4,5 +4,6 @@ idna==2.6
 PyYAML==5.1
 requests>=2.20.0
 urllib3>=1.23
+pyzure>=0.0.7
 pyred>=0.2.9
 emoji>=0.5.3

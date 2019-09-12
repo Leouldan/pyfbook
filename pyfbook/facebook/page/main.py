@@ -1,4 +1,4 @@
-#from pyfbook.facebook.azure import to_azure
+from pyfbook.facebook.azure import to_azure
 from pyfbook.facebook.page import fetch, process
 from pyfbook.facebook import date
 
@@ -37,7 +37,7 @@ def main(
             "Finished sent to Redshift " + report_name + " " + period + " between " + start + " and " + end)
 
     if azure_instance:  # Send to Azure
-        #to_azure(result, all_batch_id, azure_instance)
+        to_azure(result, all_batch_id, azure_instance)
         print(
             "Finished sent to Azure " + report_name + " " + period + " between " + start + " and " + end)
 

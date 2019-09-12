@@ -3,7 +3,7 @@ import logging
 
 import datetime
 import pandas as pd
-#import pyzure
+import pyzure
 
 from pyfbook.facebook import date
 from pyfbook.facebook.date import since_until_to_time_ranges

@@ -57,7 +57,7 @@ def define_start_date(config, report, time_increment, account):
     query = """
             SELECT max(end_report)
             FROM %s 
-            WHERE account_id=%s and time_increment=%s and report_name=%s and status='Job Completed'
+            WHERE account_id='%s' and time_increment='%s' and report_name='%s' and status='Job Completed'
             and created_at>=end_report
             """ % (table_name, account, time_increment, report.get('name'))
     start_date = execute_query(query, config)

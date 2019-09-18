@@ -38,4 +38,7 @@ def define_updated_time_filter(config, report, time_increment, account):
     except Exception as e:
         logging.info(str(e))
         return None
-    return datetime.datetime.strptime(str(updated_time)[:10], '%Y-%m-%d') - datetime.timedelta(days=28)
+    if updated_time:
+        return datetime.datetime.strptime(str(updated_time)[:10], '%Y-%m-%d') - datetime.timedelta(days=28)
+    else:
+        return None

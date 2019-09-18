@@ -7,7 +7,7 @@ from pyfbook.facebook.date import since_until_to_time_ranges, since_until_to_tim
 from pyfbook.facebook.modules.report.build_filters import build_active_filter, build_updated_time_filter
 from pyfbook.facebook.modules.report.date import define_start_date, define_updated_time_filter
 from pyfbook.facebook.modules.report.report_params import prepare_report_request
-from pyfbook.facebook.report import treat_actions, SPECIAL_ACTIONS, treat_special_action
+from pyfbook.facebook.modules.report.tools.main import SPECIAL_ACTIONS, treat_actions, treat_special_action
 from pyfbook.facebook.tools.process_response import make_date, make_batch_id
 
 

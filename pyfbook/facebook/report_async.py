@@ -11,7 +11,8 @@ from pyfbook.facebook.graph.api import get
 from pyfbook.facebook.models import SystemUser
 
 from pyfbook.facebook.modules.report import launch_report
-from pyfbook.facebook.report import treat_actions, treat_special_action, SPECIAL_ACTIONS, time_increment_mapping
+from pyfbook.facebook.modules.report.tools.main import time_increment_mapping, SPECIAL_ACTIONS, treat_actions, \
+    treat_special_action
 from pyfbook.facebook.tools.execute_query import execute_query, send_data
 from pyfbook.facebook.tools.process_response import make_date, make_batch_id
 

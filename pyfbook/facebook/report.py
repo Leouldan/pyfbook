@@ -1,35 +1,8 @@
 import logging
 import pandas as pd
 from pyfbook.facebook.modules.report import launch_report
+from pyfbook.facebook.modules.report.tools.main import time_increment_mapping
 from pyfbook.facebook.tools.execute_query import execute_query, send_data
-
-
-time_increment_mapping = {
-    "month": "month",
-    "day": "1",
-    "week": "week",
-    "quarter": "quarter",
-    "year": "year",
-    "lifetime": "lifetime"
-}
-
-SPECIAL_ACTIONS = ["video_10_sec_watched_actions"]
-
-
-def treat_actions(row):
-    actions = row.get('actions')
-    if actions:
-        for action in actions:
-            row["action_" + action["action_type"].replace('.', '_')] = action["value"]
-        del row['actions']
-    return row
-
-
-def treat_special_action(row, action_name):
-    action = row.get(action_name)
-    if action:
-        row[action_name] = action[0]["value"]
-    return row
 
 
 def _clean_data(config, dict_data, table_name):

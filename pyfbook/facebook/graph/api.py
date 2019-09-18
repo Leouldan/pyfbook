@@ -49,7 +49,7 @@ def get(system_user, endpoint, params):
     c = 0
     while paging:
         c = c + 1
-        print(c)
+        print("Paging: " + str(c))
         if result.get("paging"):
             if result["paging"].get("next"):
                 r = requests.get(result["paging"]["next"])

@@ -5,3 +5,4 @@ from .facebook.config import get_config
 from .facebook.report import get_report_history
 from .facebook.report import get_reports
 from .facebook.report_async import get_reports_async, get_report_async_history, fetch_running_job
+from .facebook.init_connector import main

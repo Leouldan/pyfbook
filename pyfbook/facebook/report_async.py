@@ -7,95 +7,15 @@ import os
 import pandas as pd
 import requests
 
-from pyfbook.facebook.graph.api import post, get
+from pyfbook.facebook.graph.api import get
 from pyfbook.facebook.models import SystemUser
 
-from pyfbook.facebook import date
-from pyfbook.facebook.date import since_until_to_time_ranges
+from pyfbook.facebook.modules.report import launch_report
+from pyfbook.facebook.report import treat_actions, treat_special_action, SPECIAL_ACTIONS, time_increment_mapping
 from pyfbook.facebook.tools.execute_query import execute_query, send_data
-
-from pyfbook.facebook.report import time_increment_mapping, make_date, make_batch_id, treat_actions, SPECIAL_ACTIONS, \
-    treat_special_action
+from pyfbook.facebook.tools.process_response import make_date, make_batch_id
 
 DEFAULT_GRAPH_API_VERSION = "v3.3"
-
-
-def _post_insights(config, account, fields, since, until, time_increment, level, breakdowns):
-    endpoint = str(account['id']) + "/insights"
-    if time_increment in ["week", "month", "quarter", "year"]:
-        time_ranges = str(since_until_to_time_ranges(since, until, time_increment))
-        params = {
-            "fields": fields,
-            "time_ranges": time_ranges,
-            "level": level,
-            "breakdowns": breakdowns
-        }
-    elif time_increment == 'lifetime':
-        params = {
-            "fields": fields,
-            "level": level,
-            "date_preset": 'lifetime',
-            "breakdowns": breakdowns
-        }
-    else:
-        time_range = date.since_until_to_time_range(since, until)
-        params = {
-            "fields": fields,
-            "time_range": time_range,
-            "level": level,
-            "time_increment": time_increment,
-            "breakdowns": breakdowns
-        }
-    data = post(system_user=SystemUser.get(config, account["app_system_user_id"]), endpoint=endpoint, params=params)
-    return {'report_run_id': data, 'app_system_user_id': account["app_system_user_id"], 'account_id': account["id"],
-            "start_report": since, "end_report": until}
-
-
-# noinspection SqlNoDataSourceInspection
-def define_start_date(config, report, time_increment, account):
-    table_name = '%s.%s' % (config.get('schema_name'), 'report_async')
-    query = """
-            SELECT max(end_report)
-            FROM %s 
-            WHERE account_id='%s' and time_increment='%s' and report_name='%s' and status='Job Completed'
-            and created_at>=end_report
-            """ % (table_name, account, time_increment, report.get('name'))
-    start_date = execute_query(query, config)
-    return datetime.datetime.strptime(str(start_date)[:10], '%Y-%m-%d') - datetime.timedelta(days=28)
-
-
-def post_report_time_increment(config, report, time_increment, start, end):
-    level = report["level"]
-    fields = report["fields"].copy()
-    if 'account_id' not in fields:
-        fields.append('account_id')
-    if "purchase" in fields:
-        fields[fields.index("purchase")] = "actions"
-    elif "total_actions" in fields:
-        fields[fields.index("total_actions")] = "actions"
-    if "video_view_10_sec" in fields:
-        fields[fields.index("video_view_10_sec")] = "video_10_sec_watched_actions"
-    fields = ", ".join(fields)
-    if report.get("breakdowns"):
-        breakdowns = [b for b in report["breakdowns"]]
-        breakdowns = ", ".join(breakdowns)
-    else:
-        breakdowns = None
-    data = []
-    if report.get('ad_accounts'):
-        accounts = report.get('ad_accounts')
-        query = "SELECT DISTINCT id, app_system_user_id FROM %s WHERE id in ('%s')" % (
-            config["schema_name"] + '.ad_accounts', "','".join(accounts))
-    else:
-        query = 'SELECT DISTINCT id, app_system_user_id FROM %s' % (config["schema_name"] + '.ad_accounts')
-    accounts = execute_query(config=config, query=query)
-    for account in accounts:
-        if start is None:
-            start = define_start_date(config, report, time_increment, account)
-        if end is None:
-            end = str(datetime.datetime.now())[:10]
-        data.append(_post_insights(config, account, fields, start, end, time_increment, level, breakdowns))
-    return data
 
 
 def _clean_data(config, dict_data, table_name):
@@ -136,7 +56,7 @@ def post_report(config, report, start, end):
     time_increments = report["time_increments"]
     for time_increment in time_increments:
         logging.info("Time increment " + str(time_increment))
-        save_reports(post_report_time_increment(config, report, time_increment_mapping[time_increment], start, end),
+        save_reports(launch_report.main(config, report, time_increment_mapping[time_increment], start, end, async=True),
                      time_increment=time_increment, report_name=report_name, config=config)
     print("Finish launching async jobs report %s" % report_name)
 
@@ -202,7 +122,8 @@ def _fetch_report(config, r):
     result_data = []
     for row in data:
         row['date'] = make_date(row['date_start'], r["time_increment"])
-        row['batch_id'] = make_batch_id(row['date'], row['account_id'])
+        row['batch_id'] = make_batch_id(row['date'], account_id=row['account_id'], campaign_id=row.get("campaign_id"),
+                                        adset_id=row.get("adset_id"), ad_id=row.get("ad_id"))
         row = treat_actions(row)
         for e in SPECIAL_ACTIONS:
             row = treat_special_action(row, action_name=e)

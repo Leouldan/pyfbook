@@ -34,7 +34,7 @@ def prepare_report_request(config, report):
         query = "SELECT DISTINCT id, app_system_user_id, account_id FROM %s WHERE id in ('%s')" % (
             config["schema_name"] + '.ad_accounts', "','".join(accounts))
     else:
-        query = 'SELECT DISTINCT id, app_system_user_id FROM %s' % (config["schema_name"] + '.ad_accounts')
+        query = 'SELECT DISTINCT id, app_system_user_id, account_id FROM %s' % (config["schema_name"] + '.ad_accounts')
     accounts = execute_query(config=config, query=query)
     result["accounts"] = accounts
     return result

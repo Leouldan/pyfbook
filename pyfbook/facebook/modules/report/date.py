@@ -22,7 +22,10 @@ def define_start_date(config, report, time_increment, account, async):
                 WHERE account_id='%s'
                 """ % (table_name, account["account_id"])
     start_date = execute_query(query, config)[0]["start_date"]
-    return str(datetime.datetime.strptime(str(start_date)[:10], '%Y-%m-%d') - datetime.timedelta(days=28))[:10]
+    if start_date:
+        return str(datetime.datetime.strptime(str(start_date)[:10], '%Y-%m-%d') - datetime.timedelta(days=28))[:10]
+    else:
+        return None
 
 
 # noinspection SqlNoDataSourceInspection

@@ -58,7 +58,7 @@ def post_report(config, report, start, end):
     for time_increment in time_increments:
         logging.info("Time increment " + str(time_increment))
         save_reports(launch_report.main(config, report, time_increment_mapping[time_increment], start, end, async=True),
-                     time_increment=time_increment, report_name=report_name, config=config)
+                     time_increment=time_increment_mapping[time_increment], report_name=report_name, config=config)
     print("Finish launching async jobs report %s" % report_name)
 
 

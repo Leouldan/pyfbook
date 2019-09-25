@@ -5,7 +5,6 @@ try:  # for pip >= 10
 except ImportError:  # for pip <= 9.0.3
     from pip.req import parse_requirements
 
-
 reqs = parse_requirements("requirements.txt", session='hack')
 reqs = [str(ir.req) for ir in reqs]
 
@@ -19,7 +18,7 @@ with open('LICENSE') as f:
 
 setup(
     name='pyfbook',
-    version='0.0.42',
+    version='0.1.1',
     description='Easily collect data from Facebook APIs',
     long_description=readme,
     author='Dacker',
@@ -28,5 +27,9 @@ setup(
     keywords='collect data facebook api',
     packages=find_packages(exclude=('tests', 'docs')),
     python_requires='>=3',
-    install_requires=reqs,
+    install_requires=[
+        "dbstream>=0.0.6",
+        "PyYAML>=5.1",
+        "googleauthentication>=0.0.7"
+    ],
 )

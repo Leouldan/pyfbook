@@ -1,7 +1,4 @@
-from pyfbook.facebook.tools.execute_query import execute_query
-
-
-def prepare_report_request(config, report):
+def prepare_report_request(facebook, report):
     result = dict()
     result["level"] = report["level"]
     fields = report["fields"].copy()
@@ -31,10 +28,11 @@ def prepare_report_request(config, report):
     result["breakdowns"] = breakdowns
     if report.get('ad_accounts'):
         accounts = report.get('ad_accounts')
-        query = "SELECT DISTINCT id, app_system_user_id, account_id FROM %s WHERE id in ('%s')" % (
-            config["schema_name"] + '.ad_accounts', "','".join(accounts))
+        query = "SELECT DISTINCT id, app_system_user_id, account_id FROM %s.ad_accounts WHERE id in ('%s')"
+        query = query % (facebook.config["schema_name"], "','".join(accounts))
     else:
-        query = 'SELECT DISTINCT id, app_system_user_id, account_id FROM %s' % (config["schema_name"] + '.ad_accounts')
-    accounts = execute_query(config=config, query=query)
+        query = "SELECT DISTINCT id, app_system_user_id, account_id FROM %s.ad_accounts"
+        query = query % facebook.config["schema_name"]
+    accounts = facebook.dbstream.execute_query(query=query)
     result["accounts"] = accounts
     return result

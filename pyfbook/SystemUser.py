@@ -1,7 +1,5 @@
 import os
 
-from pyfbook.facebook.tools.execute_query import execute_query
-
 
 class SystemUser:
     def __init__(self, id, app_id_name, app_secret_name, access_token_name):
@@ -14,15 +12,15 @@ class SystemUser:
         self.access_token = os.environ[access_token_name]
 
     @staticmethod
-    def all(config):
-        schema_name = config.get('schema_name')
-        r = execute_query('SELECT * FROM %s.app_system_user' % schema_name, config)
+    def all(facebook):
+        schema_name = facebook.config.get('schema_name')
+        r = facebook.dbstream.execute_query('SELECT * FROM %s.app_system_user' % schema_name)
         return [SystemUser(**result) for result in r]
 
     @staticmethod
-    def get(config, id):
-        schema_name = config.get('schema_name')
-        r = execute_query('SELECT * FROM %s.app_system_user WHERE id=%s' % (schema_name, id), config)
+    def get(_id, facebook):
+        schema_name = facebook.config.get('schema_name')
+        r = facebook.dbstream.execute_query('SELECT * FROM %s.app_system_user WHERE id=%s' % (schema_name, _id))
         if not r:
             print('SystemUser does not exist')
             exit(1)

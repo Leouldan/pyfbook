@@ -1,24 +1,11 @@
-# -*- coding: utf-8 -*-
-
-try:  # for pip >= 10
-    from pip._internal.req import parse_requirements
-except ImportError:  # for pip <= 9.0.3
-    from pip.req import parse_requirements
-
-reqs = parse_requirements("requirements.txt", session='hack')
-reqs = [str(ir.req) for ir in reqs]
-
 from setuptools import setup, find_packages
 
 with open('README.rst') as f:
     readme = f.read()
 
-with open('LICENSE') as f:
-    license = f.read()
-
 setup(
     name='pyfbook',
-    version='0.1.1',
+    version='0.2.0',
     description='Easily collect data from Facebook APIs',
     long_description=readme,
     author='Dacker',
@@ -28,8 +15,7 @@ setup(
     packages=find_packages(exclude=('tests', 'docs')),
     python_requires='>=3',
     install_requires=[
-        "dbstream>=0.0.6",
-        "PyYAML>=5.1",
-        "googleauthentication>=0.0.7"
+        "dbstream>=0.0.9",
+        "PyYAML>=5.1"
     ],
 )

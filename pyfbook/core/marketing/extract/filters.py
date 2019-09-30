@@ -1,7 +1,7 @@
 import json
 
 
-def build_active_filter(r):
+def add_active_filter_to_report(r):
     result = r.copy()
     result["filtering"] = r["filtering"] if r.get("filtering") else []
 
@@ -20,7 +20,7 @@ def build_active_filter(r):
     return result
 
 
-def build_updated_time_filter(r, updated_time_filter):
+def add_updated_time_filter_to_report(r, updated_time_filter):
     result = r.copy()
     result["filtering"] = r["filtering"] if r.get("filtering") else []
     if result["level"] == "ad":

@@ -5,7 +5,7 @@ with open('README.rst') as f:
 
 setup(
     name='pyfbook',
-    version='0.2.0',
+    version='0.2.1',
     description='Easily collect data from Facebook APIs',
     long_description=readme,
     author='Dacker',
@@ -15,7 +15,7 @@ setup(
     packages=find_packages(exclude=('tests', 'docs')),
     python_requires='>=3',
     install_requires=[
-        "dbstream>=0.0.9",
+        "dbstream>=0.0.10",
         "PyYAML>=5.1"
     ],
 )
